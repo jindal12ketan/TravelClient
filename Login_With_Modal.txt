@@ -1,0 +1,177 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Modal from '@mui/material/Modal';
+
+function Login() {
+    const [credentials, setCredentials] = useState({
+        email: '',
+        password: '',
+    });
+    const [isLoading, setIsLoading] = useState(false);
+    const [headText, setHeadText] = useState('');
+    const [disc, setDisc] = useState('');
+    const [bordColor, setBordColor] = useState('');
+    const [errorModalOpen, setErrorModalOpen] = useState(false);
+    const navigate = useNavigate();
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setCredentials((prevCredentials) => ({
+            ...prevCredentials,
+            [name]: value,
+        }));
+    };
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+
+        if (!credentials.email || !credentials.password) {
+            toast.warn("Email or Password is missing")
+            setIsLoading(false);
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:6060/users', {
+                method: 'GET',
+            });
+
+            if (response.ok) {
+                const users = await response.json();
+                const user = users.find((user) => user.email === credentials.email);
+
+                if (user && user.password === credentials.password) {
+                    console.log('Login successful');
+                    setHeadText("Authentication");
+                    setDisc("Login Succesfully");
+                    setBordColor('success.main');
+                    setErrorModalOpen(true);
+                    setTimeout(() => {
+                        navigate('/');
+                    }, 1000);
+                } else {
+                    setHeadText("Authentication Error");
+                    setDisc("Invalid email or password. Please try again.");
+                    setBordColor('error.main');
+                    setErrorModalOpen(true);
+                    setIsLoading(false);
+                }
+            } else {
+                console.error('Error retrieving user data');
+            }
+        } catch (error) {
+            console.error('Error logging in:', error.message);
+        }
+    };
+
+    const handleCloseModal = () => {
+        setErrorModalOpen(false);
+    };
+
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '90vh',
+            }}
+            className="login"
+        >
+            <Typography variant="h2" gutterBottom className="heading">
+                Login
+            </Typography>
+            <Box
+                component="form"
+                onSubmit={handleLogin}
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    width: '400px',
+                    padding: '20px',
+                    border: '1px solid',
+                    borderRadius: '5px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                }}
+            >
+                <TextField
+                    label="Email"
+                    type="email"
+                    name="email"
+                    value={credentials.email}
+                    onChange={handleInputChange}
+                    variant="outlined"
+                    fullWidth
+                    sx={{ marginBottom: '10px' }}
+                />
+                <TextField
+                    label="Password"
+                    type="password"
+                    name="password"
+                    value={credentials.password}
+                    onChange={handleInputChange}
+                    variant="outlined"
+                    fullWidth
+                    sx={{ marginBottom: '10px' }}
+                />
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    disabled={isLoading}
+                    sx={{ marginBottom: '10px' }}
+                >
+                    {isLoading ? 'Logging In...' : 'Login'}
+                </Button>
+            </Box>
+            <Modal
+                open={errorModalOpen}
+                onClose={handleCloseModal}
+                aria-labelledby="error-modal-title"
+                aria-describedby="error-modal-description"
+            >
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 400,
+                        height: 200,
+                        bgcolor: 'white',
+                        border: '2px solid',
+                        borderColor: bordColor,
+                        borderRadius: '5px',
+                        p: 4,
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                    }}
+                >
+                    <Typography variant="h5" gutterBottom id="error-modal-title">
+                        {headText}
+                    </Typography>
+                    <Typography variant="body1" id="error-modal-description">
+                        {disc}
+                    </Typography>
+                    <Button onClick={handleCloseModal} color="primary" sx={{ mt: 2 }}>
+                        Close
+                    </Button>
+                </Box>
+            </Modal>
+            <ToastContainer/>
+        </Box>
+    );
+}
+
+export default Login;
