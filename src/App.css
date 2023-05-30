@@ -1,0 +1,333 @@
+::-webkit-scrollbar
+{
+  display: none;
+}
+html,body{
+  width: 100%;
+  overflow-x: hidden;
+}
+/* =====================================NavBar===================================== */
+.img-logo{
+  position: relative;
+  left: 100px;
+  height: 40px;
+  width: 40px;
+}
+.navbar{
+  background-color: #d4bf1dc0;
+}
+.navbar-nav{
+  width: 70%;
+}
+.logsign{
+  color: white;
+  font-size: 20px;
+}
+.navbar-brand img{
+  height: 75px;
+  width: 100x;
+}
+
+.left-list{
+  margin-left: auto;
+  font-size: 20px;
+  justify-content: center;
+}
+.nav-item{
+  padding-left: 30px;
+}
+/* ======================================Home========================================= */
+/* ================Hero section===================== */
+.hero-section {
+  background-image: url(/public/images/background.jpg);
+  background-color: rgba(0, 0, 0, 0.605);
+  background-blend-mode: color;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 700px;
+  padding: 100px 0;
+  }
+  .hero-text h1{
+    font-size: 80px;
+    color: white;
+  }
+  .hero-section span{
+    color: rgb(85, 174, 216);
+    font-family: Brush script MT;
+  }
+  .hero-text p{
+    color: azure;
+  }
+  /* ================Trav-Feild section===================== */
+  /* .trav-feild{
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+  } */
+  .border-edge{
+    border: 3px solid rgb(255, 153, 0);
+  }
+  .custBox fieldset{
+    border:none;
+  }
+
+  .custBox> div > div {
+    padding-top:8px ;
+  }
+
+  /* ================Destination section===================== */
+  .destinations-section {
+  padding: 100px 0;
+  /* background-color: rgba(221, 24, 24, 0.63); */
+  background-blend-mode: color;
+  height: auto;
+  background-image: url(/public/images/dest-back.jpg);
+  background-blend-mode: color;
+  background-repeat: no-repeat;
+  background-position: 0px -30px;
+  background-size:cover;
+  }
+  .destinations-section h2{
+    text-align: center;
+    color: rgb(255, 136, 0);
+    font-size: 80px;
+    font-family: Brush script MT;
+  }
+  .destinations-section h3{
+    color: rgb(255, 255, 255);
+  }
+  .destination-card {
+  margin-bottom: 50px;
+  text-align: center;
+  }
+  .testimonials-section {
+  background-color: #f8f8f8;
+  padding: 100px 0;
+  }
+  
+  .testimonial-card {
+  margin-bottom: 50px;
+  }
+  
+  .contact-section {
+  padding: 100px 0;
+  }
+  
+  .contact-text {
+  margin-top: 50px;
+  }
+  
+  .phone-number {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  }
+  
+  .phone-number svg {
+  margin-right: 10px;
+  }
+  
+  @media (max-width: 767px) {
+  .hero-text {
+  text-align: center;
+  margin-top: 0;
+  }
+  
+  .about-text {
+  text-align: center;
+  margin-top: 50px;
+  }
+  }
+/* ======================================Category========================================= */
+.main{
+  overflow-x: hidden;
+}
+/* ======================================Flip_Card========================================= */
+.flippable-card-container{
+  height: 300px;
+  width: auto;
+  perspective: 1000px;
+}
+/* ======================================Card========================================= */
+.card-meg{
+  height:100%;
+  width: 100%;
+  transform-style: preserve-3d;
+  position: relative;
+  border-radius: 5px;
+  border: 2px solid white;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.8);
+  transition: transform 1000ms;
+}
+.card-meg:hover{
+  transform: rotateY(180deg);
+}
+.card-front, .card-back{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  justify-content: center;
+  align-items: center;
+  font-family: Monserret;
+  font-weight: 300;
+  font-size: 15px;
+  color: white;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9);
+}
+.card-back{
+  background-color: #ffad66;
+  transform: rotateY(180deg);
+}
+
+.sel-text{
+  font-family: Brush script MT;
+}
+/* ====================================Footer======================================== */
+.footer{
+  background-color: rgb(141, 239, 241);
+}
+.logo img{
+  height: 90px;
+}
+.icon-size img{
+  height: 30px;
+  width: 55px;
+}
+/*  */
+.f-head{
+  font-size: 20px;
+}
+.contact-us{
+  background-image: url(../public/images/contact-back.jpg);
+  background-color: rgba(0, 0, 0, 0.409);
+  background-blend-mode: color;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 600px;
+  /* padding: 100px 0; */
+}
+.contact-us label{
+  color: white;
+}
+.error{
+  color: red;
+  font-size: 14px;
+}
+.image{
+  width: 350;
+  height: auto;
+}
+.image img{
+  height: 300px;
+  width: 300px;
+}
+
+
+
+.Cart-container {
+  margin: 20px;
+}
+
+.Cart-title {
+  margin-bottom: 30px;
+}
+
+.Cart {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.Cart-items {
+  flex-basis: 70%;
+  margin-right: 20px;
+}
+
+.Cart-summary {
+  flex-basis: 30%;
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+.Cart-summary-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.Cart-summary-total {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.Cart-checkout-btn {
+  margin-top: 20px;
+  width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .Cart {
+    flex-direction: column;
+  }
+  
+  .Cart-items {
+    margin-right: 0;
+    margin-bottom: 20px;
+    flex-basis: auto;
+  }
+  
+  .Cart-summary {
+    flex-basis: auto;
+  }
+}
+
+.registration{
+  background-image: url(/public/images/registration.jpg);
+  background-color: rgba(0, 0, 0, 0.409);
+  background-blend-mode: color;
+  background-repeat: no-repeat;
+  background-size: cover;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.registration .heading{
+  color: thistle;
+}
+.login{
+  background-image: url(/public/images/login.jpg);
+  background-color: rgba(0, 0, 0, 0.409);
+  background-blend-mode: color;
+  background-repeat: no-repeat;
+  background-size: cover;
+  backdrop-filter:blur(2);
+  -webkit-backdrop-filter: blur(2);
+}
+.login .heading{
+  color: thistle;
+}
+.login .heading:hover{
+  background: -webkit-linear-gradient(rgba(229,181,193,255), rgba(157,150,200,255), rgba(252,214,189,255)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* .errmsg {
+  background-color: lightpink;
+  color: firebrick;
+  font-weight: bold;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.line {
+  display: inline-block;
+} */
+
+
