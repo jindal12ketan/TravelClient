@@ -1,0 +1,182 @@
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { removeFromCart, clearCart, addToCart } from "../actions/cartActions";
+import { Button, Card, Row, Col, Form, Container } from "react-bootstrap";
+
+const Cart = () => {
+  const cartItems = useSelector(({ cart }) => cart.items);
+  const dispatch = useDispatch();
+
+  const [coupon, setCoupon] = useState("");
+  const [couponApplied, setCouponApplied] = useState(false);
+
+  const handleRemove = (itemId) => {
+    const itemIndex = cartItems.findIndex((item) => item.id === itemId);
+
+    if (itemIndex === -1) {
+      return;
+    }
+
+    const { count } = cartItems[itemIndex];
+
+    if (count === 0) {
+      cartItems.splice(itemIndex, 1);
+    }
+
+    dispatch(removeFromCart(itemId, cartItems));
+  };
+
+  const handleClear = () => {
+    dispatch(clearCart());
+  };
+
+  const calculateTotal = (items) => {
+    return items.reduce((total, { count, price }) => {
+      return count > 0 ? total + price * count : total;
+    }, 0);
+  };
+
+  const calculateDiscountedTotal = (total) => {
+    if (coupon === "DISCOUNT10") {
+      return total * 0.9;
+    } else if (coupon === "DISCOUNT20") {
+      return total * 0.8;
+    } else {
+      return total;
+    }
+  };
+
+  const renderCartItem = (item, index) => {
+    const { id, title, price, count, image } = item;
+    const totalPrice = price * count;
+
+    const handleIncrement = () => {
+      dispatch(addToCart({ id, title, price, image }, cartItems));
+    };
+
+    const handleDecrement = () => {
+      dispatch(removeFromCart(id, cartItems));
+    };
+
+    return (
+      <Card key={`${index}-${id}`} className="mb-3">
+        <Row className="align-items-center">
+          <Col md={3}>
+            <img src={image} alt={title} width="100" />
+          </Col>
+          <Col md={3}>{title}</Col>
+          <Col md={2}>${price}</Col>
+          <Col md={2}>
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              onClick={handleDecrement}
+            >
+              -
+            </Button>{" "}
+            {count}{" "}
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              onClick={handleIncrement}
+            >
+              +
+            </Button>
+          </Col>
+          <Col md={2}>${totalPrice}</Col>
+          <Col md={2}>
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={() => handleRemove(id)}
+            >
+              Remove
+            </Button>
+          </Col>
+        </Row>
+      </Card>
+    );
+  };
+
+  const renderedCartItems = cartItems
+    .filter((item) => item.count > 0)
+    .map(renderCartItem);
+
+  const total = calculateTotal(cartItems);
+  const discountedTotal = calculateDiscountedTotal(total);
+
+  const handleCouponChange = (e) => {
+    setCoupon(e.target.value);
+  };
+
+  const handleApplyCoupon = () => {
+    setCouponApplied(true);
+  };
+
+  return (
+    <Container fluid className="Cart-container">
+      <h1 className="Cart-title">Shopping Cart</h1>
+      <div className="Cart">
+        <div className="Cart-items">
+          {renderedCartItems.length ? (
+            renderedCartItems
+          ) : (
+            <p className="text-center">Your cart is empty</p>
+          )}
+        </div>
+        {cartItems.length > 0 && (
+          <div className="Cart-summary">
+            <div className="Cart-summary-header">
+              <h3>Summary</h3>
+              <Button variant="link" onClick={handleClear}>
+                Clear cart
+              </Button>
+            </div>
+            <div className="Cart-summary-body">
+              <Row>
+                <Col>Total:</Col>
+                <Col>${total.toFixed(2)}</Col>
+              </Row>
+              {couponApplied ? (
+                <>
+                  <Row>
+                    <Col>Discount:</Col>
+                    <Col>${(total - discountedTotal).toFixed(2)}</Col>
+                  </Row>
+                  <Row className="Cart-summary-total">
+                    <Col>Discounted total:</Col>
+                    <Col>${discountedTotal.toFixed(2)}</Col>
+                  </Row>
+                </>
+              ) : (
+                <>
+                  <Row className="mb-3">
+                    <Col xs={9}>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter coupon code"
+                        value={coupon}
+                        onChange={handleCouponChange}
+                      />
+                    </Col>
+                    <Col xs={3}>
+                      <Button onClick={handleApplyCoupon}>Apply</Button>
+                    </Col>
+                  </Row>
+                  <Row className="Cart-summary-total">
+                    <Col>Total:</Col>
+                    <Col>${total.toFixed(2)}</Col>
+                  </Row>
+                </>
+              )}
+              <Button className="Cart-checkout-btn" variant="success">
+                Checkout
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </Container>
+  );
+};
+export default Cart;
