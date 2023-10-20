@@ -26,10 +26,10 @@ function Login() {
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
-          dispatch(setUser(JSON.parse(storedUser)));
-          navigate('/');
+            dispatch(setUser(JSON.parse(storedUser)));
+            navigate('/');
         }
-      }, [dispatch, navigate]);
+    }, [dispatch, navigate]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -42,49 +42,45 @@ function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-      
+
         if (!credentials.email || !credentials.password) {
-          toast.warn('Email or Password is missing');
-          setIsLoading(false);
-          return;
+            toast.warn('Email or Password is missing');
+            setIsLoading(false);
+            return;
         }
-      
+
         try {
-          const response = await fetch('http://localhost:6060/users', {
-            method: 'GET',
-          });
-      
-          if (response.ok) {
-            const users = await response.json();
-            const user = users.find((user) => user.email === credentials.email);
-      
-            if (user && user.password === credentials.password) {
-              // Set user in local storage
-              localStorage.setItem('user', JSON.stringify(user));
-              dispatch(setUser(user));
-              console.log('Login successful');
-              setLock(false);
-              setTimeout(() => {
-                navigate('/');
-              }, 1000);
+            const response = await fetch('http://localhost:7070/users', {
+                method: 'GET',
+            });
+
+            if (response.ok) {
+                const users = await response.json();
+                const user = users.find((user) => user.email === credentials.email);
+
+                if (user && user.password === credentials.password) {
+                    // Set user in local storage
+                    localStorage.setItem('user', JSON.stringify(user));
+                    dispatch(setUser(user));
+                    console.log('Login successful');
+                    setLock(false);
+                    setTimeout(() => {
+                        navigate('/');
+                    }, 1000);
+                } else {
+                    console.log('Invalid email or password. Please try again.');
+                    toast.error('Invalid email or password. Please try again.');
+                    setIsLoading(false);
+                }
             } else {
-              console.log('Invalid email or password. Please try again.');
-              setIsLoading(false);
+                console.error('Error retrieving user data');
             }
-          } else {
-            console.error('Error retrieving user data');
-          }
         } catch (error) {
-          console.error('Error logging in:', error.message);
+            console.error('Error logging in:', error.message);
         }
-      };
-
-    //   const handleLogout = () => {
-    //     dispatch(clearUser());
-    //     navigate('/login');
-    //   };
-
+    };
     return (
+
         <Box
             sx={{
                 display: 'flex',
@@ -96,6 +92,20 @@ function Login() {
             className="login"
         >
             <Box
+            sx={{
+                display: 'flex',
+                fontSize: '50px',
+                flexDirection: 'column',
+                alignItems: 'center',
+                width: '400px',
+                color:'#ffffff',
+                padding: '20px',
+                borderRadius: '5px',
+            }}
+            >
+                Travel Genix
+            </Box>
+            <Box
                 component="form"
                 onSubmit={handleLogin}
                 sx={{
@@ -106,10 +116,10 @@ function Login() {
                     padding: '20px',
                     border: '1px solid',
                     borderRadius: '5px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
                 }}
             >
-                <Typography variant="h3" gutterBottom className="heading">
+                <Typography variant="h3" gutterBottom sx={{color:'#3b5998'}}>
                     Login
                     {lock ? <LockOutlinedIcon sx={{ fontSize: 40 }} /> : <LockOpenOutlinedIcon sx={{ fontSize: 40 }} />}
                 </Typography>
@@ -134,21 +144,27 @@ function Login() {
                     sx={{ marginBottom: '10px' }}
                 />
                 <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                        <Link to="/forgotPassword">Forgot Password</Link>
-                    </Grid>
-                    <Grid item xs={6}>
+                    <Grid
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        item xs={12}>
                         <Button
                             type="submit"
                             variant="contained"
                             color="primary"
                             disabled={isLoading}
-                            sx={{ marginBottom: '10px' }}
+                            sx={{ marginBottom: '10px', width: '450px' }}
                         >
                             {isLoading ? 'Logging In...' : 'Login'}
                         </Button>
                     </Grid>
-                    <Link to="/registration">New User Registration</Link>
+                    <Grid item xs={6}>
+                        <Link to="/forgotPassword">Forgot Password</Link>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Link to="/registration">New User Registration</Link>
+                    </Grid>
                 </Grid>
             </Box>
             <ToastContainer />

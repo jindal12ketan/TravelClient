@@ -14,6 +14,7 @@ import Login from './components/Login';
 import TourPackagePage from './components/TourPackagePage';
 import Registration from './components/Registration';
 import ForgotPassword from './components/ForgotPassword';
+import Checkout from './components/Checkout';
 // import { Api } from './components/Api';
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
               <Route path="/tourpackage" element={<TourPackagePage/>}></Route>
               <Route path="/registration" element={<Registration/>}></Route>
               <Route path="/forgotPassword" element={<ForgotPassword/>}></Route>
+              <Route path="/checkout" element={<Checkout/>}></Route>
             </Routes>
             <Footer/>
           </Router>

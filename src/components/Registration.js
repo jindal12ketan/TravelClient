@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -35,7 +35,7 @@ function Registration() {
         }
 
         try {
-            const response = await fetch('http://localhost:6060/create', {
+            const response = await fetch('http://localhost:7070/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -107,6 +107,7 @@ function Registration() {
                         value={formData[field.name]}
                         onChange={handleInputChange}
                         variant="outlined"
+                        autoComplete='off'
                         fullWidth
                         required
                         sx={{ marginBottom: '10px' }}
@@ -116,11 +117,13 @@ function Registration() {
                     type="submit"
                     variant="contained"
                     color="primary"
+                    size="large"
                     disabled={isLoading}
-                    sx={{ marginBottom: '10px' }}
+                    sx={{ marginBottom: '10px', width: '450px'}}
                 >
                     {isLoading ? 'Registering...' : 'Register'}
                 </Button>
+                <Link to="/login"> Already have an account?</Link>
                 {error && (
                     <Typography color="error" sx={{ marginBottom: '10px' }}>
                         {error}

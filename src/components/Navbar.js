@@ -93,8 +93,9 @@ const Navbar = () => {
                     <AccountCircleIcon/>
                   </a>
                   <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a className="dropdown-item" href="#">Welcome, {loggedInUser.name}</a></li>
-                    <li><a className="dropdown-item" href="#">Another action</a></li>
+                    <li className="d-flex justify-content-evenly nav-link"><Link to="/">Welcome, {loggedInUser.name}</Link></li>
+                    {/* <li><a className="dropdown-item" href="#">Welcome, {loggedInUser.name}</a></li> */}
+                    <li className="d-flex justify-content-evenly"><Link to="/forgotPassword"><Button>Reset Password</Button></Link></li>
                     <li><hr className="dropdown-divider" /></li>
                     <li className="d-flex justify-content-evenly"><Button onClick={handleLogout}>Log out</Button></li>
                   </ul>
@@ -107,7 +108,7 @@ const Navbar = () => {
                 </li>
               )}
             </ul>
-            <form className="d-flex">
+            {/* <form className="d-flex">
               <input
                 className="form-control me-2"
                 type="search"
@@ -117,7 +118,7 @@ const Navbar = () => {
               <button className="btn btn-outline-success" type="submit">
                 Search
               </button>
-            </form>
+            </form> */}
           </div>
         </div>
       </nav>

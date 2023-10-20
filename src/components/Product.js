@@ -33,11 +33,11 @@ const Product = ({ product }) => {
                                 navigate('/tourpackage', {
                                     state: {
                                         product,
-                                        title: product.title,
-                                        image: product.image,
-                                        category: product.category,
-                                        price: product.price,
-                                        description: product.description
+                                        // title: product.title,
+                                        // image: product.image,
+                                        // category: product.category,
+                                        // price: product.price,
+                                        // description: product.description
                                     }
                                 })
                             }

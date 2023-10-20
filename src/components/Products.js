@@ -9,7 +9,7 @@ import Product from './Product';
 const Products = () => {
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(6);
-    const [selectedCategory, setSelectedCategory] = useState("Beach Holidays");
+    const [selectedCategory, setSelectedCategory] = useState("Europe Tours");
     const [selectedPriceRange, setSelectedPriceRange] = useState([3000, 5000]);
     const categories = [...new Set(Travdata.map((product) => product.category))];
     const [sortingMethod, setSortingMethod] = useState('lowToHigh');
