@@ -82,7 +82,6 @@ function ForgotPassword() {
                 });
 
                 if (resetResponse.ok) {
-                    console.log('Password reset successful');
                     toast.success('Password updated successfully');
                     setTimeout(() => {
                         navigate('/login');

@@ -1,35 +1,38 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Badge, Button } from "@mui/material";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import LoginIcon from '@mui/icons-material/Login';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import LoginIcon from "@mui/icons-material/Login";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearUser, setUser } from "../reducers/userSlice";
-import DnsIcon from '@mui/icons-material/Dns';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import NewspaperIcon from '@mui/icons-material/Newspaper';
-import store from "../store";
+import DnsIcon from "@mui/icons-material/Dns";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import NewspaperIcon from "@mui/icons-material/Newspaper";
 const Navbar = () => {
-  const cartItems = useSelector(state => state.cart.items);
-  const cartItemCount = cartItems.reduce((count, item) => count + item.count, 0);
-  const loggedInUser = useSelector(state => state.user.user);
+  const cartItems = useSelector((state) => state.cart.items);
+  const cartItemCount = cartItems.reduce(
+    (count, item) => count + item.count,
+    0
+  );
+  const loggedInUser = useSelector((state) => state.user);
+  console.log(loggedInUser, "loggewd");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      dispatch(setUser(JSON.parse(storedUser)));
+      dispatch(setUser(storedUser));
     }
-  }, [dispatch]);
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");
     dispatch(clearUser());
-    navigate('/login');
+    navigate("/login");
   };
-  console.log(store.getState());
+
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -89,15 +92,35 @@ const Navbar = () => {
               </li>
               {loggedInUser ? (
                 <li className="nav-item dropdown">
-                  <a className="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <AccountCircleIcon/>
+                  <a
+                    className="nav-link"
+                    href="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <AccountCircleIcon />
                   </a>
-                  <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li className="d-flex justify-content-evenly nav-link"><Link to="/">Welcome, {loggedInUser.name}</Link></li>
+                  <ul
+                    className="dropdown-menu"
+                    aria-labelledby="navbarDropdown"
+                  >
+                    <li className="d-flex justify-content-evenly nav-link">
+                      <Link to="/">Welcome, {loggedInUser.user?.name}</Link>
+                    </li>
                     {/* <li><a className="dropdown-item" href="#">Welcome, {loggedInUser.name}</a></li> */}
-                    <li className="d-flex justify-content-evenly"><Link to="/forgotPassword"><Button>Reset Password</Button></Link></li>
-                    <li><hr className="dropdown-divider" /></li>
-                    <li className="d-flex justify-content-evenly"><Button onClick={handleLogout}>Log out</Button></li>
+                    <li className="d-flex justify-content-evenly">
+                      <Link to="/forgotPassword">
+                        <Button>Reset Password</Button>
+                      </Link>
+                    </li>
+                    <li>
+                      <hr className="dropdown-divider" />
+                    </li>
+                    <li className="d-flex justify-content-evenly">
+                      <Button onClick={handleLogout}>Log out</Button>
+                    </li>
                   </ul>
                 </li>
               ) : (
@@ -108,17 +131,6 @@ const Navbar = () => {
                 </li>
               )}
             </ul>
-            {/* <form className="d-flex">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button className="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form> */}
           </div>
         </div>
       </nav>
