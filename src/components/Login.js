@@ -18,6 +18,13 @@ function Login() {
     email: "",
     password: "",
   });
+  const [localState, setLocalState] = useReducer(
+    (prevState, newState) => ({ ...prevState, ...newState }),
+    {
+      isLoading: false,
+      lock: true,
+    }
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [lock, setLock] = useState(true);
   const navigate = useNavigate();
@@ -63,7 +70,7 @@ function Login() {
       if (res.ok) {
         // Set user in local storage
         const data = await res.json();
-        console.log(data);
+        // console.log(data);
         localStorage.setItem("user", data);
         dispatch(setUser(data));
         setLock(false);

@@ -1,31 +1,48 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Badge, Button } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Badge,
+  Menu,
+  MenuItem,
+  Button,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LoginIcon from "@mui/icons-material/Login";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { clearUser, setUser } from "../reducers/userSlice";
 import DnsIcon from "@mui/icons-material/Dns";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { clearUser, setUser } from "../reducers/userSlice";
+
 const Navbar = () => {
-  const cartItems = useSelector((state) => state.cart.items);
+  const [menuAnchor, setMenuAnchor] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const cartItems = useSelector((state) => state.cart.items || []);
   const cartItemCount = cartItems.reduce(
-    (count, item) => count + item.count,
+    (count, item) => count + (item.count || 0),
     0
   );
   const loggedInUser = useSelector((state) => state.user);
-  console.log(loggedInUser, "loggewd");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      dispatch(setUser(storedUser));
+      dispatch(setUser(JSON.parse(storedUser)));
     }
-  }, []);
+  }, [dispatch]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -33,108 +50,103 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  const handleMenuOpen = (event) => {
+    setMenuAnchor(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchor(null);
+  };
+
+  const toggleDrawer = (open) => () => {
+    setDrawerOpen(open);
+  };
+  const navLinks = [
+    { label: "Home", link: "/" },
+    { label: "Tour/Trav", link: "/products" },
+    { label: "About Us", link: "/aboutus" },
+    { label: "Contact Us", link: "/contactus" },
+  ];
+
   return (
-    <div>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div className="container-fluid">
-          <a className="navbar-brand" href="#">
-            <img src="/png/logo-no-background.png" alt="..." />
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          onClick={toggleDrawer(true)}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+          <img
+            src="/png/logo-no-background.png"
+            alt="Logo"
+            style={{ height: "40px", verticalAlign: "middle" }}
+          />
+        </Typography>
+        <Badge badgeContent={cartItemCount} color="secondary">
+          <IconButton color="inherit" component={Link} to="/cart">
+            <ShoppingCartIcon />
+          </IconButton>
+        </Badge>
+        <IconButton color="inherit" component={Link} to="/detail">
+          <DnsIcon />
+        </IconButton>
+        <IconButton color="inherit" component={Link} to="/news">
+          <NewspaperIcon />
+        </IconButton>
+        {loggedInUser ? (
+          <>
+            <IconButton
+              color="inherit"
+              onClick={handleMenuOpen}
+              aria-controls="user-menu"
+              aria-haspopup="true"
+            >
+              <AccountCircleIcon />
+            </IconButton>
+            <Menu
+              id="user-menu"
+              anchorEl={menuAnchor}
+              open={Boolean(menuAnchor)}
+              onClose={handleMenuClose}
+            >
+              <MenuItem>Welcome, {loggedInUser.user?.name}</MenuItem>
+              <MenuItem component={Link} to="/forgotPassword">
+                Reset Password
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>Log out</MenuItem>
+            </Menu>
+          </>
+        ) : (
+          <Button
+            color="inherit"
+            startIcon={<LoginIcon />}
+            component={Link}
+            to="/login"
           >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <Link to="/" className="nav-link">
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/products" className="nav-link">
-                  Tour/Trav
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/aboutus" className="nav-link">
-                  About Us
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/contactus" className="nav-link">
-                  Contact Us
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Badge badgeContent={cartItemCount} color="primary">
-                  <Link to="/cart" className="nav-link">
-                    <ShoppingCartIcon />
-                  </Link>
-                </Badge>
-              </li>
-              <li className="nav-item">
-                <Link to="/detail" className="nav-link">
-                  <DnsIcon />
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/news" className="nav-link">
-                  <NewspaperIcon />
-                </Link>
-              </li>
-              {loggedInUser ? (
-                <li className="nav-item dropdown">
-                  <a
-                    className="nav-link"
-                    href="#"
-                    id="navbarDropdown"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <AccountCircleIcon />
-                  </a>
-                  <ul
-                    className="dropdown-menu"
-                    aria-labelledby="navbarDropdown"
-                  >
-                    <li className="d-flex justify-content-evenly nav-link">
-                      <Link to="/">Welcome, {loggedInUser.user?.name}</Link>
-                    </li>
-                    {/* <li><a className="dropdown-item" href="#">Welcome, {loggedInUser.name}</a></li> */}
-                    <li className="d-flex justify-content-evenly">
-                      <Link to="/forgotPassword">
-                        <Button>Reset Password</Button>
-                      </Link>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
-                    <li className="d-flex justify-content-evenly">
-                      <Button onClick={handleLogout}>Log out</Button>
-                    </li>
-                  </ul>
-                </li>
-              ) : (
-                <li className="nav-item">
-                  <Link to="/login" className="nav-link">
-                    Login/Signup <LoginIcon sx={{ fontSize: 20 }} />
-                  </Link>
-                </li>
-              )}
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </div>
+            Login/Signup
+          </Button>
+        )}
+      </Toolbar>
+      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+        <List>
+          {navLinks.map((navLink) => (
+            <ListItem
+              key={navLink.label}
+              sx={{ color: "black" }}
+              component={Link}
+              to={navLink.link}
+              onClick={toggleDrawer(false)}
+            >
+              <ListItemText primary={navLink.label} />
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
+    </AppBar>
   );
 };
 
