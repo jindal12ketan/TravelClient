@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../reducers/userSlice";
@@ -26,7 +26,7 @@ function Login() {
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      dispatch(setUser(JSON.parse(storedUser)));
+      dispatch(setUser(storedUser));
       navigate("/");
     }
   }, [dispatch, navigate]);
