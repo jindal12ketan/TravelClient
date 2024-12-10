@@ -12,21 +12,19 @@ import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Grid } from "@mui/material";
+import { handleError } from "../utils/handleError";
 
 function Login() {
-  const [credentials, setCredentials] = useState({
-    email: "",
-    password: "",
-  });
   const [localState, setLocalState] = useReducer(
     (prevState, newState) => ({ ...prevState, ...newState }),
     {
       isLoading: false,
       lock: true,
+      email: "",
+      password: "",
     }
   );
-  const [isLoading, setIsLoading] = useState(false);
-  const [lock, setLock] = useState(true);
+  const { email, password, isLoading, lock } = localState;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -40,51 +38,46 @@ function Login() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setCredentials((prevCredentials) => ({
-      ...prevCredentials,
-      [name]: value,
-    }));
+    setLocalState({ [name]: value });
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    if (!credentials.email || !credentials.password) {
+    if (!email || !password) {
       toast.warn("Email or Password is missing");
-      setIsLoading(false);
       return;
     }
 
     try {
+      setLocalState({ isLoading: true });
       const res = await fetch("http://localhost:7070/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: credentials.email,
-          password: credentials.password,
+          email: email,
+          password: password,
         }),
       });
       if (res.ok) {
-        // Set user in local storage
         const data = await res.json();
         // console.log(data);
         localStorage.setItem("user", data);
         dispatch(setUser(data));
-        setLock(false);
+        setLocalState({ lock: false });
         setTimeout(() => {
-          setIsLoading(false);
+          setLocalState({ isLoading: false });
           navigate("/");
         }, 1000);
       } else {
-        setIsLoading(false);
-        console.error("Error retrieving user data");
+        handleError(res.error);
+        setLocalState({ isLoading: false });
       }
     } catch (error) {
-      setIsLoading(false);
-      console.error("Error logging in:", error.message);
+      setLocalState({ isLoading: false });
+      handleError(error);
     }
   };
   return (
@@ -138,7 +131,7 @@ function Login() {
           label="Email"
           type="email"
           name="email"
-          value={credentials.email}
+          value={email}
           onChange={handleInputChange}
           variant="outlined"
           fullWidth
@@ -148,7 +141,7 @@ function Login() {
           label="Password"
           type="password"
           name="password"
-          value={credentials.password}
+          value={password}
           onChange={handleInputChange}
           variant="outlined"
           fullWidth

@@ -40,7 +40,7 @@ const Navbar = () => {
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      dispatch(setUser(JSON.parse(storedUser)));
+      dispatch(setUser(storedUser));
     }
   }, [dispatch]);
 
