@@ -6,8 +6,7 @@ class Detail extends React.Component{
         const URL = " https://jsonplaceholder.typicode.com/users";
         Axios.get(URL)
         .then(res=>{
-            this.setState({employee: res.data})
-            console.log(res.data);
+            this.setState({employee: res.data});
         }).catch(error=>
             console.error(`Error: ${error}`)
         );

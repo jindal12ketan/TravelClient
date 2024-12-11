@@ -1,14 +1,12 @@
-import { configureStore } from '@reduxjs/toolkit';
-import cartReducer from './reducers/cartReducer';
-import userReducer from './reducers/userSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import cartReducer from "./reducers/cartReducer";
+import userReducer from "./slices/userSlice";
 
 const store = configureStore({
   reducer: {
     cart: cartReducer,
-    user: userReducer
-  }
+    user: userReducer,
+  },
 });
-
-// console.log(store.getState());
 
 export default store;

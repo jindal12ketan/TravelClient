@@ -20,35 +20,28 @@ import LoginIcon from "@mui/icons-material/Login";
 import DnsIcon from "@mui/icons-material/Dns";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { clearUser, setUser } from "../reducers/userSlice";
-
+import { clearUser, setUser } from "../slices/userSlice";
+import { get } from "utils/lodash";
+import { handleLogout } from "utils/handleLogout";
 const Navbar = () => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const cartItems = useSelector((state) => state.cart.items || []);
+  // const cartItems = [];
   const cartItemCount = cartItems.reduce(
     (count, item) => count + (item.count || 0),
     0
   );
-  const loggedInUser = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      dispatch(setUser(storedUser));
-    }
-  }, [dispatch]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    dispatch(clearUser());
-    navigate("/login");
-  };
+  // const loggedInUser = useSelector((state) => state);
+  const { user } = useSelector(
+    (state) => ({
+      user: get(state, "LoginSlice.user", []),
+    }),
+    shallowEqual
+  );
 
   const handleMenuOpen = (event) => {
     setMenuAnchor(event.currentTarget);
@@ -97,7 +90,7 @@ const Navbar = () => {
         <IconButton color="inherit" component={Link} to="/news">
           <NewspaperIcon />
         </IconButton>
-        {loggedInUser ? (
+        {user.name ? (
           <>
             <IconButton
               color="inherit"
@@ -113,7 +106,7 @@ const Navbar = () => {
               open={Boolean(menuAnchor)}
               onClose={handleMenuClose}
             >
-              <MenuItem>Welcome, {loggedInUser.user?.name}</MenuItem>
+              <MenuItem>Welcome, {user.name}</MenuItem>
               <MenuItem component={Link} to="/forgotPassword">
                 Reset Password
               </MenuItem>
