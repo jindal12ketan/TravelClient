@@ -6,6 +6,8 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Constants from "Constants";
+const { SERVER_URL } = Constants;
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -33,15 +35,12 @@ function ForgotPassword() {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:7070/otp/sendOTP/${email}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${SERVER_URL}/otp/sendOTP/${email}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.ok) {
         setIsOTPSent(true);
@@ -69,7 +68,7 @@ function ForgotPassword() {
 
     try {
       const response = await fetch(
-        `http://localhost:7070/otp/verifyOTP/${email}/${otp}`,
+        `${SERVER_URL}/otp/verifyOTP/${email}/${otp}`,
         {
           method: "POST",
           headers: {
@@ -80,7 +79,7 @@ function ForgotPassword() {
 
       if (response.ok) {
         const resetResponse = await fetch(
-          `http://localhost:7070/users/forgotPassword/${email}`,
+          `${SERVER_URL}/users/forgotPassword/${email}`,
           {
             method: "PUT",
             headers: {

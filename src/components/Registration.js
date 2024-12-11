@@ -4,6 +4,8 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Constants from "Constants";
+const { SERVER_URL } = Constants;
 
 function Registration() {
   const [formData, setFormData] = useState({
@@ -15,7 +17,6 @@ function Registration() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -35,7 +36,7 @@ function Registration() {
     }
 
     try {
-      const response = await fetch("http://localhost:7070/users/create", {
+      const response = await fetch(`${SERVER_URL}/users/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
