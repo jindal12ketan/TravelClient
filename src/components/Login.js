@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Grid } from "@mui/material";
-import { handleError } from "utils/handleError";
+import { handleError } from "../utils/handleError";
 import { loginStore } from "slices/loginSlice";
 import { useLoginMutation } from "api/login";
 import { get } from "utils/lodash";
@@ -53,9 +53,11 @@ const Login = () => {
       return;
     }
     login(payload)
+      .unwrap()
       .then((res) => {
-        const token = get(res.data, "token", "");
-        const user = get(res.data, "user", "");
+        console.log(res);
+        const token = get(res, "token", "");
+        const user = get(res, "user", "");
         dispatch(loginStore({ token, user }));
         localStorage.setItem("token", token);
         navigate("/");

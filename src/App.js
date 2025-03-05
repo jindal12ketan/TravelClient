@@ -44,7 +44,7 @@ function App() {
                 path="/forgotPassword"
                 element={<ForgotPassword />}
               ></Route>
-              <Route path="/checkout" element={<Checkout />}></Route>
+              {/* <Route path="/checkout" element={<Checkout />}></Route> */}
             </Routes>
             <Footer />
           </Router>

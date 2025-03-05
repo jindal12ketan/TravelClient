@@ -60,7 +60,7 @@ const Navbar = () => {
     { label: "About Us", link: "/aboutus" },
     { label: "Contact Us", link: "/contactus" },
   ];
-
+  console.log(user);
   return (
     <AppBar position="static">
       <Toolbar>

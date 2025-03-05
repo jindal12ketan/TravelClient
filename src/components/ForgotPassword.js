@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -10,22 +10,22 @@ import Constants from "Constants";
 const { SERVER_URL } = Constants;
 
 function ForgotPassword() {
-  const [email, setEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [otp, setOTP] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isOTPSent, setIsOTPSent] = useState(false);
   const navigate = useNavigate();
+  const [localState, setLocalState] = useReducer(
+    (prevState, newState) => ({ ...prevState, ...newState }),
+    {
+      email: "",
+      newPassword: "",
+      otp: "",
+      isLoading: false,
+      isOTPSent: false,
+    }
+  );
+  const { email, newPassword, otp, isLoading, isOTPSent } = localState;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === "email") {
-      setEmail(value);
-    } else if (name === "newPassword") {
-      setNewPassword(value);
-    } else if (name === "otp") {
-      setOTP(value);
-    }
+    setLocalState({ [name]: value });
   };
 
   const handleSendOTP = async () => {
@@ -43,7 +43,7 @@ function ForgotPassword() {
       });
 
       if (response.ok) {
-        setIsOTPSent(true);
+        setLocalState({ isOTPSent: true });
         toast.success("OTP sent successfully");
       } else if (response.status === 404) {
         toast.error("No user found for the provided email");
@@ -58,11 +58,11 @@ function ForgotPassword() {
 
   const handlePasswordReset = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    setLocalState({ isLoading: true });
 
     if (!email || !newPassword || !otp) {
       toast.warn("Email, OTP, or New Password is missing");
-      setIsLoading(false);
+      setLocalState({ isLoading: false });
       return;
     }
 
@@ -110,7 +110,7 @@ function ForgotPassword() {
       toast.error("Error resetting password");
     }
 
-    setIsLoading(false);
+    setLocalState({ isLoading: false });
   };
 
   const fieldData = [
